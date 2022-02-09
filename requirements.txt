@@ -2,5 +2,5 @@ numpy
 pandas
 matplotlib
 jupyter
-lidar
+rplidar
 sklearn
