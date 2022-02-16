@@ -1,8 +1,10 @@
 import logging
-from lib.commandToArduino import ArduinoCommands
+from lib.arduino.commandToArduino import ArduinoCommands
+from lib.lidar.lidarObjectModel import *
+from lib.wifi.wifiScan import *
 
 # LOGGING PLATFORM
-LOGGING_FILE = "log.log"
+LOGGING_FILE = "./log/log.log"
 logging.basicConfig(filename=LOGGING_FILE, encoding='utf-8', level=logging.DEBUG)
 
 class main():
