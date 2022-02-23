@@ -5,7 +5,10 @@ __pycache__/
 
 # C extensions
 *.so
-
+*.flake8
+*.isort.cfg
+*.yaml
+*.shellcheckrc
 # Distribution / packaging
 .Python
 build/
