@@ -11,7 +11,7 @@ logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 
 class scan():
     def __init__(self):
-       pass
+        pass
     
     def callback(self, packet):
         pass
