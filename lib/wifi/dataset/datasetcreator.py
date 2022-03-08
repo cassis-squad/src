@@ -44,7 +44,7 @@ def main():
     global net_dict
 
     with open('./dataset.csv','w') as fp:
-        fp.write('macro_zone, micro_zone,')
+        fp.write('macro_zone,micro_zone,')
         for net in newtorks:
             fp.write(f'{net},')
         fp.write('\n')
