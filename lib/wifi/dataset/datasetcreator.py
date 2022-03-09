@@ -12,8 +12,8 @@ import os
 
 
 # interface name, check using iwconfig
-N_TIMES = 30
-interface = "wlan0mon"
+N_TIMES = 40
+interface = "wlan1mon"
 zone = -1
 newtorks = {'itis-pvt',
             'itis-wifi',
@@ -43,11 +43,11 @@ def main():
     global zone
     global net_dict
 
-    with open('./dataset.csv','w') as fp:
-        fp.write('macro_zone,micro_zone,')
-        for net in newtorks:
-            fp.write(f'{net},')
-        fp.write('\n')
+   # with open('./dataset0.csv','w') as fp:
+   #     fp.write('macro_zone-micro_zone,')
+   #     for net in newtorks:
+   #         fp.write(f'{net},')
+   #     fp.write('\n')
 
     while True:
         macro_zone = input('Insert the macro-zone: ')
@@ -55,13 +55,14 @@ def main():
         for _ in range(N_TIMES):
             net_dict = {i : None for i in newtorks}
             sniff(prn=callback, iface=interface, count=100)
-            with open('./dataset.csv','a') as fp:
-                fp.write(f'{macro_zone},{micro_zone},')
+            with open('./dataset0.csv','a') as fp:
+                fp.write(f'{macro_zone}-{micro_zone},')
                 for net in newtorks:
                     if net_dict[net] is None:
                         fp.write('-120,')
                     else: 
-                        fp.write(f'{net_dict[net]},')    
+                        fp.write(f'{net_dict[net]},')
+                        print(net_dict[net])  
                 fp.write('\n')
         
         
