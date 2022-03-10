@@ -8,6 +8,7 @@ from lib.wifi.wifiScan import scan
 LOGGING_FILE = "./log/log.log"
 logging.basicConfig(filename=LOGGING_FILE, encoding="utf-8", level=logging.DEBUG)
 
+destinazione = input("Inserisci posizione di destinazione:--> ")
 
 while True:
-    pass
+        scan.wifiPositioning(destinazione)

@@ -8,11 +8,15 @@ import serial
 # 2 --> Destra
 # 3 --> Sinistra
 
+# A --> piano
+# B --> medio
+# C --> veloce
+
+logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
 
 class ArduinoCommands:
     def __init__(self):
         USB_PORT = "/dev/ttyACM0"
-        logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
 
     def connectionTest(self):
         usb = None
@@ -24,10 +28,8 @@ class ArduinoCommands:
 
         return usb
 
-    def control(self):
+    def control(self, command):
         usb = self.connectionTest()
-
-        command = input("Insert number --> ")
 
         if command == "0":
             usb.write(b"0")
@@ -43,3 +45,18 @@ class ArduinoCommands:
             logging.debug("Send left to Arduino --> 3")
         else:
             logging.warning("Command not recognized! -- 404")
+
+    def speedControl(self, speed):
+        usb = self.connectionTest()
+
+        if speed == "A":
+            usb.write(b"A")
+            logging.debug("Send low speed to Arduino")
+        elif speed == "B":
+            usb.write(b"B")
+            logging.debug("Send mid speed to Arduino")
+        elif speed == "C":
+            usb.write(b"C")
+            logging.debug("Send high speed to Arduino")
+        else:
+            logging.warning("Speed not recognized! -- 404")
