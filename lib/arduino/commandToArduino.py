@@ -23,7 +23,7 @@ class ArduinoCommands:
         try:
             usb = serial.Serial(self.USB_PORT, 9600, timeout=2)
         except:
-            logging.critical(f"{datetime.today()} USB CONNECTION FAILED")
+            logging.critical(f"{datetime.today()} - USB CONNECTION FAILED")
             exit()
 
         return usb
@@ -33,30 +33,30 @@ class ArduinoCommands:
 
         if command == "0":
             usb.write(b"0")
-            logging.debug("Send forward to Arduino --> 0")
+            logging.debug(f"{datetime.today()} - Send forward to Arduino --> 0")
         elif command == "1":
             usb.write(b"1")
-            logging.debug("Send backward to Arduino --> 1")
+            logging.debug(f"{datetime.today()} - Send backward to Arduino --> 1")
         elif command == "2":
             usb.write(b"2")
-            logging.debug("Send right to Arduino --> 2")
+            logging.debug(f"{datetime.today()} - Send right to Arduino --> 2")
         elif command == "3":
             usb.write(b"3")
-            logging.debug("Send left to Arduino --> 3")
+            logging.debug(f"{datetime.today()} - Send left to Arduino --> 3")
         else:
-            logging.warning("Command not recognized! -- 404")
+            logging.warning(f"{datetime.today()} - Command not recognized! -- 404")
 
     def speedControl(self, speed):
         usb = self.connectionTest()
 
         if speed == "A":
             usb.write(b"A")
-            logging.debug("Send low speed to Arduino")
+            logging.debug(f"{datetime.today()} - Send low speed to Arduino")
         elif speed == "B":
             usb.write(b"B")
-            logging.debug("Send mid speed to Arduino")
+            logging.debug(f"{datetime.today()} - Send mid speed to Arduino")
         elif speed == "C":
             usb.write(b"C")
-            logging.debug("Send high speed to Arduino")
+            logging.debug(f"{datetime.today()} - Send high speed to Arduino")
         else:
-            logging.warning("Speed not recognized! -- 404")
+            logging.warning(f"{datetime.today()} - Speed not recognized! -- 404")

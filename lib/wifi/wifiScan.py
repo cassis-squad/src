@@ -12,7 +12,7 @@ from threading import Thread
 logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 
 #model
-model_filename = "wifi_model.pkl"
+model_filename = "modello/wifi_model.pkl"
 with open(model_filename, "rb") as file:
     wifi_m = pickle.load(file)
 
