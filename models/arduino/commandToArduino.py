@@ -3,14 +3,7 @@ from datetime import datetime
 
 import serial
 
-# 0 --> Avanti
-# 1 --> Indietro
-# 2 --> Destra
-# 3 --> Sinistra
 
-# A --> piano
-# B --> medio
-# C --> veloce
 
 logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
 

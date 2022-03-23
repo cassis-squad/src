@@ -4,8 +4,7 @@ import time
 import os
 import pickle
 import numpy as np
-
-from scapy.all import *
+from datetime import datetime
 from threading import Thread
 
 
@@ -61,7 +60,7 @@ class scan():
         actual_pos = wifi_m.predict(actual_scan)
 
         if actual_pos == destinazione:
-            print("Sono arrivato")
+            return actual_pos
         else:
-            print("Non sono arrivato")
+            return "-1"
         

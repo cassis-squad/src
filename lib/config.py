@@ -1,3 +1,4 @@
+ARDUINO_PORT_NAME = '/dev/ttyACM0'
 LIDAR_PORT_NAME = '/dev/ttyUSB0'
 CENTER = 0
 RIGHT = 60
