@@ -9,6 +9,7 @@ import numpy as np
 import lib.config as config
 import random
 import serial
+from sklearn import pickle
 
 from scapy.all import *
 from rplidar import RPLidar
@@ -18,9 +19,13 @@ LOGGING_FILE = "./log/log.log"
 logging.basicConfig(filename=LOGGING_FILE, encoding="utf-8", level=logging.DEBUG)
 
 #WIFI MODEL
-model_filename = "lib/wifi_model.pkl"
-with open(model_filename, "rb") as file:
-    wifi_m = pickle.load(file)
+try:
+    model_filename = "./lib/wifi_model.pkl"
+    with open(model_filename, "rb") as file:
+        wifi_m = pickle.load(file)
+except FileExistsError:
+    logging.critical(f"{datetime.today()} - MODEL NOT FOUND")
+
 
 global destinazione, actual_pos
 
@@ -137,7 +142,7 @@ class lidarThread(thr):
 #! WIFI CODE
 class scan():
     def __init__(self):
-        self.interface = "wlan1mon"
+        self.interface = WIFI_INTERFACE_NAME
         self.networks = {'itis-pvt',
                         'itis-wifi',
                         'wifi-itis',
@@ -165,13 +170,14 @@ class scan():
     def wifi(self):
         self.net_dict = {i : None for i in self.networks}
         sniff(prn=self.callback, iface=self.interface, count=100)
-        lan = np.array([[]])
+        lan = []
         for net in self.newtorks:
             if self.net_dict[net] is None:
-                np.append(lan, "-120")
+                lan.append("-120")
             else: 
-                np.append(lan,self.net_dict[net])
+                lan.append(self.net_dict[net])
         
+        lan = np.array(lan)
         return lan
 
     def wifiPositioning(self):
@@ -179,7 +185,6 @@ class scan():
         actual_pos = wifi_m.predict(actual_scan)
 
         return actual_pos
-
 
 class wifiThread(thr):
         def __init__(self):
@@ -197,8 +202,6 @@ class wifiThread(thr):
                 elif destinazione == actual_pos:
                         self.running = False
                         logging.debug(f"{datetime.today()} - EXITING SCAN THREAD")
-                
-
 
 def main():
         global destinazione
@@ -206,6 +209,9 @@ def main():
         wifi = wifiThread()
         obstacle = lidarThread()
         threads = []
+
+        wifi.start()
+        lidarThread.start()
 
         threads.append(wifi)
         threads.append(obstacle)
@@ -216,8 +222,6 @@ def main():
                         if element.running == False:
                                 element.join()
                                 print("finish")
-
-
 
 if __name__ == "__main__":
         main()
