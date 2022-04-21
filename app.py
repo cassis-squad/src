@@ -71,23 +71,23 @@ class lidarClass():
         return ret_dict
 
     def avanti(self):
-        self.arduino.write(b'0')
+        self.arduino.write(b'F')
         logging.debug(f"{datetime.today()} - GOING FORWARD")
 
     def stops(self):
-        self.arduino.write(b'4')
+        self.arduino.write(b'S')
         logging.debug(f"{datetime.today()} - STOPPED")
 
     def indietro(self):
-        self.arduino.write(b'1')
+        self.arduino.write(b'B')
         logging.debug(f"{datetime.today()} - GOING BACKWARD")
 
     def destra(self):
-        self.arduino.write(b'2')
+        self.arduino.write(b'R')
         logging.debug(f"{datetime.today()} - GOING RIGHT")
 
     def sinistra(self):
-        self.arduino.write(b'3')
+        self.arduino.write(b'L')
         logging.debug(f"{datetime.today()} - GOING LEFT")
         
     def random_directions(self):
