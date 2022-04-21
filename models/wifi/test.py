@@ -1,20 +1,12 @@
-import logging
-import pandas
-import time
-import os
-import pickle
-import numpy as np
-
 from scapy.all import *
 from threading import Thread
+import time
+import os
+import numpy as np
+from joblib import load
 
-
-logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
-
-#model
-model_filename = "modello/wifi_model.pkl"
-with open(model_filename, "rb") as file:
-    wifi_m = pickle.load(file)
+model_filename = "/home/rdfilippo/Desktop/Scuola/PON-CassisSquad/src/lib/wifi_model.joblib"
+wifi_m = load(model_filename)
 
 
 class scan():
@@ -22,15 +14,16 @@ class scan():
         self.interface = "wlan1mon"
         self.networks = {'itis-pvt',
                         'itis-wifi',
-                        'wifi-itis',
                         'itis-pvt',
                         'itis-wifi2',
-                        'AP_SMART25',
+                        'wifi-itis',
                         'wifi-lab01',
                         'AP_ITISLI03_2.5',
                         'AP_SMART50',
                         'AP_ITISLI03_5.0',
                         'AP_ITISLI02'}
+
+
         self.net_dict = {}
 
     def callback(self, packet):
@@ -41,27 +34,29 @@ class scan():
                 dbm_signal = packet.dBm_AntSignal
             except:
                 dbm_signal = "N/A"
-            if ssid in self.newtorks:
+            if ssid in self.networks:
                 self.net_dict[ssid] = dbm_signal
 
     def wifi(self):
         self.net_dict = {i : None for i in self.networks}
         sniff(prn=self.callback, iface=self.interface, count=100)
-        lan = np.array([[]])
-        for net in self.newtorks:
+        lan = []
+        for net in self.networks:
             if self.net_dict[net] is None:
-                np.append(lan, "-120")
-            else: 
-                np.append(lan,self.net_dict[net])
-        
+                lan.append("-120")
+            else:
+                lan.append(self.net_dict[net])
+
+        lan = np.array([lan])
         return lan
 
-    def wifiPositioning(self, destinazione):
-        actual_scan = self.wifi()
-        actual_pos = wifi_m.predict(actual_scan)
+    def predict(self):
+        testLect = self.wifi()
+        print(testLect)
+        print(wifi_m.predict(testLect))
 
-        if actual_pos == destinazione:
-            print("Sono arrivato")
-        else:
-            print("Non sono arrivato")
-        
+
+
+if __name__ == "__main__":
+    test = scan()
+    test.predict()
