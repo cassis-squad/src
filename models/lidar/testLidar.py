@@ -14,7 +14,8 @@ def goForward():
     global timeCommand
 
     if time.clock() - timeCommand > config.FREQ_COMMANDS:
-        arduino.write(b'w')
+        #arduino.write(b'w')
+        print("avanti")
         timeCommand = time.clock()
 
 #Send "stop" signal to Arduino
@@ -22,7 +23,8 @@ def stops():
     global timeCommand
 
     if time.clock() - timeCommand > config.FREQ_COMMANDS:
-        arduino.write(b's')
+        #arduino.write(b's')
+        print("stop")
         timeCommand = time.clock()
 
 #Send "go backwards" signal to Arduino
@@ -30,7 +32,8 @@ def goBackwards():
     global timeCommand
 
     if time.clock() - timeCommand > config.FREQ_COMMANDS:
-        arduino.write(b'x')
+        #arduino.write(b'x')
+        print("indietro")
         timeCommand = time.clock()
 
 #Send "turn right" signal to Arduino
@@ -38,7 +41,8 @@ def turnRight():
     global timeCommand
 
     if time.clock() - timeCommand > config.FREQ_COMMANDS:
-        arduino.write(b'd')
+        #arduino.write(b'd')
+        print("destra")
         timeCommand = time.clock()
 
 #Send "turn left" signal to Arduino
@@ -46,7 +50,8 @@ def turnLeft():
     global timeCommand
 
     if time.clock() - timeCommand > config.FREQ_COMMANDS:
-        arduino.write(b'a')
+        #arduino.write(b'a')
+        print("sinistra")
         timeCommand = time.clock()
 
 """
@@ -119,8 +124,8 @@ def main():
         if len(measurments_list) >= config.NUMBER_MEASURE:
             
             obstacles = find_obstacles(measurments_list)
-            results = trackedObjectDirection(frame, obstacles)
-            commandsTable[convert(results)][convert(obstacles)]()
+            #results = trackedObjectDirection(frame, obstacles)
+            commandsTable[convert(results)][convert(obstacles)]
             measurments_list.clear()
 
     ###release the capture###
@@ -153,7 +158,7 @@ commandsTable = { "000":
                 }
 
 #For serial communication with Arduino
-arduino = serial.Serial(config.ARDUINO_PORT_NAME ,9600)
+#arduino = serial.Serial(config.ARDUINO_PORT_NAME ,9600)
 
 #Define the cam
 #Initialize timer used to prevent the bombardment in serial communication with Arduino
