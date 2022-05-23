@@ -2,26 +2,23 @@ import logging
 from threading import Thread as thr
 import time
 from datetime import datetime
-import pandas as pd
 import os
-import pickle
 import numpy as np
 import lib.config as config
 import random
 import serial
-import joblib
-
-from scapy.all import *
 from rplidar import RPLidar
 
 LOGGING_FILE = "./log/log-l.log"
 logging.basicConfig(filename=LOGGING_FILE, encoding="utf-8", level=logging.DEBUG)
 
 global destinazione, actual_pos
+actual_pos="prova"
 
 class lidarClass():
     def __init__(self):
-        self.arduino = serial.Serial(config.ARDUINO_PORT_NAME ,9600)
+        pass
+        #self.arduino = serial.Serial(config.ARDUINO_PORT_NAME ,9600)
 
 
     def find_obstacles(self, measurements_list):
@@ -36,17 +33,17 @@ class lidarClass():
             
             if measure_distance <= config.MAX_DISTANCE and measure_distance >= config.MIN_DISTANCE and measure_power >= config.QUALITY:
                 #right
-                if measure_angle > config.RIGHT / 2 and measure_angle <= config.RIGHT:
+                if measure_angle < 135 and measure_angle > 90:
                     ob_dict["right"] = True
+                    print(ob_dict)
                 #left
-                elif measure_angle >= config.LEFT and measure_angle < (360 -(config.RIGHT/2)):
+                elif measure_angle > 315 and measure_angle < 300:
                     ob_dict["left"] = True
+                    print(ob_dict)
                 #center
-                elif measure_angle >= config.CENTER and measure_angle <= config.RIGHT/2:
+                elif measure_angle < 90:
                     ob_dict["center"] = True
-                #center
-                elif measure_angle >= (360 -(config.RIGHT/2)) and measure_angle <= 360:
-                    ob_dict["center"] = True
+                    print(ob_dict)
             
                 ret_dict = update_obstacles(ret_dict, ob_dict)
             
@@ -55,23 +52,28 @@ class lidarClass():
     def avanti(self):
         self.arduino.write(b'w')
         logging.debug(f"{datetime.today()} - GOING FORWARD")
+        print("avanti")
 
     def stops(self):
         self.arduino.write(b'q')
         logging.debug(f"{datetime.today()} - STOPPED")
+        print("stop")
 
     def indietro(self):
         self.arduino.write(b's')
         logging.debug(f"{datetime.today()} - GOING BACKWARD")
+        print("indietro")
 
     def destra(self):
         self.arduino.write(b'd')
         logging.debug(f"{datetime.today()} - GOING RIGHT")
+        print("destra")
 
     def sinistra(self):
         self.arduino.write(b'a')
         logging.debug(f"{datetime.today()} - GOING LEFT")
-        
+        print("sinistra")
+
     def random_directions(self):
         direction_list = [self.sinistra(), self.destra()]
         direction = random.choice(direction_list)
@@ -100,7 +102,7 @@ class lidarClass():
             self.stops()
             self.random_directions()
 
-class lidarThread(thr):
+class lidarThread():
         def __init__(self):
                 self.running = True
                 self.lidar = RPLidar(config.LIDAR_PORT_NAME)
@@ -114,6 +116,7 @@ class lidarThread(thr):
                                     self.measurments_list.append(measurment)
                                     if len(self.measurments_list) >= config.NUMBER_MEASURE:
                                             obstacles = self.lc.find_obstacles(self.measurements_list)
+                                            print(obstacles)
                                             self.lc.motors_controller(obstacles)
                                             obstacles.clear()
                                             self.measurments_list.clear()
@@ -125,22 +128,27 @@ class lidarThread(thr):
 def main():
         global destinazione
 
+        lidarThread.run()
+
         #wifi = wifiThread()
+        '''
         obstacle = lidarThread()
         threads = []
 
+        destinazione = "test"
+
         #wifi.start()
-        lidarThread.start()
+        obstacle.start()
 
         #threads.append(wifi)
         threads.append(obstacle)
 
-        destinazione = input("Inserisci destinazione --> ")
         while True:
                 for element in threads:
                         if element.running == False:
                                 element.join()
                                 print("finish")
+        '''
 
 if __name__ == "__main__":
         main()
